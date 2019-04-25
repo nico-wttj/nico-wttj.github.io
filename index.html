@@ -441,21 +441,45 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_unit_tests_and_the_basics_of_tdd">1. Unit tests and the basics of TDD</a></li>
-<li><a href="#_dealing_with_the_outside_world">2. Dealing with the outside world</a></li>
-<li><a href="#_unit_testing_of_database_migration_rollback">3. Unit Testing of database migration rollback</a></li>
-<li><a href="#_code_coverage">4. Code Coverage</a></li>
-<li><a href="#_property_based_testing">5. Property-based testing</a></li>
-<li><a href="#_conclusions">6. Conclusions</a></li>
+<li><a href="#_introduction">1. Introduction</a></li>
+<li><a href="#_unit_tests_and_the_basics_of_tdd">2. Unit tests and the basics of TDD</a></li>
+<li><a href="#_dealing_with_the_outside_world">3. Dealing with the outside world</a></li>
+<li><a href="#_unit_testing_of_database_migration_rollback">4. Unit Testing of database migration rollback</a></li>
+<li><a href="#_code_coverage">5. Code Coverage</a></li>
+<li><a href="#_property_based_testing">6. Property-based testing</a></li>
+<li><a href="#_conclusions">7. Conclusions</a></li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_unit_tests_and_the_basics_of_tdd">1. Unit tests and the basics of TDD</h2>
+<h2 id="_introduction">1. Introduction</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Let&#8217;s begin this article with a little reminder: what is a unit test?</p>
+<p>After a little reminder about <strong>unit testing</strong> and <strong>Test-Driven Development</strong>, I will share in this article some useful tips when doing TDD.</p>
+</div>
+<div class="paragraph">
+<p>How to <strong>isolate your code</strong> to ease unit testing? Focus on the currently tested functionality, simulate external entities behavior, refactoring and so on.</p>
+</div>
+<div class="paragraph">
+<p>Then I&#8217;ll deal with one important thing that is often not tested: <strong>database migration rollback</strong>.</p>
+</div>
+<div class="paragraph">
+<p>Next I&#8217;ll show you how <strong>code coverage</strong> could prevent you from omitting testing some important parts of your code.</p>
+</div>
+<div class="paragraph">
+<p>Finally, I&#8217;ll give you an overview of <strong>Property-Based Testing</strong>, a new way of writing tests that can be a good complement to unit tests.</p>
+</div>
+<div class="paragraph">
+<p>This article will not cover other type of tests (end-to-end, functional&#8230;&#8203;) or other xDD techniques (Behavior DD, Domain DD, Postman DD&#8230;&#8203;).</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_unit_tests_and_the_basics_of_tdd">2. Unit tests and the basics of TDD</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Let&#8217;s begin with a little reminder: what is a unit test?</p>
 </div>
 <div class="paragraph">
 <p>Unit tests enable to:</p>
@@ -502,58 +526,30 @@ The steps are as follow:</p>
 During this process, as the code grows, it is also essential to refactor code.</p>
 </div>
 <div class="paragraph">
-<p>There are several advantages of processing that way:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>no more code than you really need: when writing code first, you often tend to start with a complex architecture which is
-actually useless for the actual needs</p>
-</li>
-<li>
-<p>you don&#8217;t forget any requirement as you iterate over them</p>
-</li>
-<li>
-<p>you can be confident that code refactoring does not break anything</p>
-</li>
-<li>
-<p>the different parts of your code are loosely coupled, they offer clean interfaces by design</p>
-</li>
-<li>
-<p>increased productivity</p>
-</li>
-</ul>
+<p>There are several <strong>advantages</strong> of processing that way.</p>
 </div>
 <div class="paragraph">
-<p>You could be skeptical regarding the last statement. After several years of TDD, I&#8217;m convinced
-that I would have spent more time debugging an issue in production than the time needed to write one more unit test during the initial development phase that could have enlightened the issue.</p>
+<p>You don&#8217;t write more code than you really need: when writing code first, you often tend to start with a complex architecture which is
+actually useless for the actual needs.<br>
+You don&#8217;t forget any requirement as you iterate over them.<br>
+You can be confident that code refactoring does not break anything.<br>
+The different parts of your code are loosely coupled, they offer clean interfaces by design. And finally, your productivity is increased.</p>
 </div>
 <div class="paragraph">
-<p>TDD has several trade-offs you should be aware of:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>number of lines of code: your tests will quickly have more lines than your actual code, choose carefully your examples, refactor your tests (yeah, tests should be refactored too)</p>
-</li>
-<li>
-<p>could be hard to maintain: make your tests as small as possible and add some comments around the non trivial parts, pay attention to race conditions and tests that randomly fail, clean resources that were created during tests to avoid any interference between tests</p>
-</li>
-<li>
-<p>introducing tests mean a longer continuous integration &amp; delivery process, if the tests of your project take too much time too execute, consider taking some time to fix this issue (refactoring, delete less relevant tests)</p>
-</li>
-</ul>
+<p>You could be skeptical regarding the last statement. After several years of TDD, I&#8217;m convinced that I would have spent more time debugging an issue in production than the time needed to write one more unit test during the initial development phase that could have enlightened the issue.</p>
 </div>
 <div class="paragraph">
-<p>In this article I will share some useful tips when doing TDD. We&#8217;ll then have a look at Property-Based Testing, a new way of writing tests that can be a good complement to unit tests.</p>
+<p>TDD has also several <strong>trade-offs</strong> you should be aware of.</p>
 </div>
 <div class="paragraph">
-<p>This article will not cover other type of tests (end-to-end, functional&#8230;&#8203;) or other xDD techniques (Behavior DD, Domain DD, Postman DD&#8230;&#8203;).</p>
+<p>The number of lines of code can quickly grow and end up with having more lines than your actual code. Therefore choose carefully your examples and refactor your tests (yeah, tests should be refactored too).<br>
+Tests could be hard to maintain: make your tests as small as possible and add some comments around the non trivial parts, pay attention to race conditions and tests that randomly fail, clean resources that were created during tests to avoid any interference between tests.<br>
+Finally, introducing tests mean a longer continuous integration &amp; delivery process, if the tests of your project take too much time too execute, consider taking some time to fix this issue (refactoring, delete less relevant tests).</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_dealing_with_the_outside_world">2. Dealing with the outside world</h2>
+<h2 id="_dealing_with_the_outside_world">3. Dealing with the outside world</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>It often occurs that you want to unit test a piece of code that makes calls to
@@ -601,7 +597,7 @@ end</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Here is a unit test or the job controller:</p>
+<p>Here is a unit test for the job controller:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -656,8 +652,8 @@ Randomized with seed 522928</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>You can see that an error that occurred outside the module being tested makes the test fail.
-This why it&#8217;s very important to isolate your module.</p>
+<p><strong>You can see that an error that occurred outside the module being tested makes the test fail.
+This is why it&#8217;s very important to isolate your module.</strong></p>
 </div>
 <div class="paragraph">
 <p>To perform this isolation, you must introduce a test double.</p>
@@ -676,7 +672,7 @@ Its code differs from the one used in production and provides a canned response.
 <p>In our case we will use a different implementation of the Slack module depending on the environment.</p>
 </div>
 <div class="paragraph">
-<p>The easiest way of doing that is to set the module to be used according to the Mix env.</p>
+<p>The easiest way of doing that is to set the module to be used according to the Mix environment (dev, test, prod&#8230;&#8203;).</p>
 </div>
 <div class="listingblock">
 <div class="title">prod.exs</div>
@@ -696,7 +692,7 @@ Its code differs from the one used in production and provides a canned response.
 </div>
 <div class="paragraph">
 <p>This way, Slack module will be used in production and SlackStub in tests.<br>
-The stub module does nothing, it merely returns :ok.
+The stub module does nothing, it merely returns <code>:ok</code>.
 We introduce a new module named SlackService which acts as a router to the relevant module.</p>
 </div>
 <div class="paragraph">
@@ -773,7 +769,7 @@ Randomized with seed 492140</pre>
 <p>What about testing the Slack module itself?</p>
 </div>
 <div class="paragraph">
-<p>We could adopt the same strategy and create a Tesla stub. Yet your test will be too much tightened with the HTTP client library you chose. A well-written test should not change if you decide one day to switch to an other HTTP client library than Tesla.</p>
+<p>We could adopt the same strategy and create a stub for the Tesla module: a module that wouldn’t actually perform HTTP calls but merely return a fake HTTP responses. Yet your test will be too much tightened with the HTTP client library you chose, here Tesla. <strong>A well-written test should not change if you decide one day to switch to another HTTP client library than Tesla.</strong></p>
 </div>
 <div class="paragraph">
 <p>Let me introduce the <a href="https://github.com/pspdfkit-labs/bypass">bypass</a> library that will start a dummy web server on free port and will act in our case as the Slack server.</p>
@@ -860,10 +856,10 @@ Sometimes writing tests and thinking about module isolation can even help you re
 </div>
 </div>
 <div class="sect1">
-<h2 id="_unit_testing_of_database_migration_rollback">3. Unit Testing of database migration rollback</h2>
+<h2 id="_unit_testing_of_database_migration_rollback">4. Unit Testing of database migration rollback</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>I&#8217;d like tackle one topic that is rarely covered by unit tests in all projects I&#8217;ve seen so far: the unit testing of database migration files, especially the rollback process.</p>
+<p>I&#8217;d like to tackle one topic that is rarely covered by unit tests in all the projects I&#8217;ve seen so far: the unit testing of database migration files, especially the rollback process.</p>
 </div>
 <div class="paragraph">
 <p>Many frameworks offer the possibility of creating database migration files to keep track of the database schema history, migrate to the last step or rollback to a previous step in the history.</p>
@@ -873,7 +869,7 @@ Sometimes writing tests and thinking about module isolation can even help you re
 </div>
 <div class="paragraph">
 <p>When creating an Ecto migration file, the default callback to implement is change/0.<br>
-It expects to contains automatically-reversible migrations.</p>
+It expects to contain automatically-reversible migrations.</p>
 </div>
 <div class="listingblock">
 <div class="title">20190318203551_create_jobs.exs</div>
@@ -912,7 +908,7 @@ $ mix ecto.rollback
 </div>
 </div>
 <div class="paragraph">
-<p>Yet, not all migrations are automatically reversible!</p>
+<p><strong>Yet, not all migrations are automatically reversible!</strong></p>
 </div>
 <div class="paragraph">
 <p>A good example of this kind is deleting a column.
@@ -1040,13 +1036,13 @@ That&#8217;s a matter of choice. I personally prefer not loosing any data and th
 </div>
 </div>
 <div class="sect1">
-<h2 id="_code_coverage">4. Code Coverage</h2>
+<h2 id="_code_coverage">5. Code Coverage</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Including a test coverage tool in your project is a must-have, whatever the programming language you&#8217;re using.</p>
 </div>
 <div class="paragraph">
-<p>Yet you must keep in mind that having a 100% of code coverage doesn&#8217;t mean your code has no bug.</p>
+<p><strong>Yet you must keep in mind that having a 100% of code coverage doesn&#8217;t mean your code has no bug!</strong></p>
 </div>
 <div class="paragraph">
 <p>By looking at the code coverage reports, you must pay attention to the sensitive parts of the code that miss unit tests.<br>
@@ -1056,7 +1052,7 @@ Testing every single line is a waste of time and you may find yourself with a hu
 <p>In Elixir, I recommend the <a href="https://hex.pm/packages/excoveralls">excoveralls</a> library which generates friendly HTML reports stored locally on pushed on coveralls website.</p>
 </div>
 <div class="paragraph">
-<p>To generate the report, simply run "mix coveralls.html":</p>
+<p>To generate the report, simply run <code>mix coveralls.html</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1106,10 +1102,10 @@ Generating report...</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="_property_based_testing">5. Property-based testing</h2>
+<h2 id="_property_based_testing">6. Property-based testing</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The way we use to write unit tests is not perfect, it doesn&#8217;t necessarily covers all possible inputs your code could get in the real life.</p>
+<p>The way we use to write unit tests is not perfect, it doesn&#8217;t necessarily cover all possible inputs your code could get in real life.</p>
 </div>
 <div class="paragraph">
 <p>We can test nominal cases, some edge cases we have thought of, but we always end up with a set of unit tests that has a finite set of inputs with their expected output.</p>
@@ -1122,11 +1118,11 @@ Generating report...</pre>
 To do so, you have to define the "properties" of the input you function expects. Input generators can then be set up according to these properties.</p>
 </div>
 <div class="paragraph">
-<p>The notion of property-based testing is born in 1999 with the release of the Haskell library <a href="https://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf">Quickcheck</a>.
+<p>The notion of property-based testing was born in 1999 with the release of the Haskell library <a href="https://www.cs.tufts.edu/~nr/cs257/archive/john-hughes/quick.pdf">Quickcheck</a>.
 Since then, the library has been ported in many languages, including Elixir.</p>
 </div>
 <div class="paragraph">
-<p>We&#8217;re going to use the stream_data library presented by José Valim and Andrea Leopardi at ElixirConf 2018. It&#8217;s not included in Elixir yet but there&#8217;s a high chance it will in the near future.</p>
+<p>We&#8217;re going to use the <a href="https://github.com/whatyouhide/stream_data">stream_data</a> library presented by <a href="https://www.youtube.com/watch?v=p84DMv8TQuo">José Valim and Andrea Leopardi at ElixirConf 2018</a>. It&#8217;s not included in Elixir yet but there&#8217;s a high chance it will in the near future.</p>
 </div>
 <div class="paragraph">
 <p>A trivial example: let&#8217;s say you&#8217;re asked to write a function Wttj.Math.sum/2 that returns the sum of 2 integers.
@@ -1278,12 +1274,12 @@ You want your tests to run fast on your laptop but let your CI/CD tool take its 
 </div>
 </div>
 <div class="paragraph">
-<p>This way a bug that won&#8217;t necessarily be detected on you laptop has higher chances to be detected by your CI/CD tool: better late than never!</p>
+<p>This way a bug that won&#8217;t necessarily be detected on your laptop has higher chances to be detected by your CI/CD tool: better late than never!</p>
 </div>
 <div class="paragraph">
 <p>The stream_data library is made up of 2 main modules: StreamData and ExUnitProperties.
 StreamData holds the building blocks (integer(), list(), binary(), tuple()) to help you create your own input generators whereas ExUnitProperties holds the implementation of all useful macros: "property", "gen, "check" and so on.
-I encourage you to have a look at the documentation and some useful talks than you will find on YouTube.</p>
+I encourage you to have a look at the documentation and some useful talks than you will find on YouTube like the one from the <a href="https://www.youtube.com/watch?v=VhW9D0mbW1o">Indianapolis Elixir Users Group</a>.</p>
 </div>
 <div class="paragraph">
 <p>Property-based tests must not be seen as an alternate way of testing. Unit tests are still good, especially in the first development stages, and easier to write.
@@ -1292,7 +1288,7 @@ Once all things are settled down, it&#8217;s worth making the effort to write pr
 </div>
 </div>
 <div class="sect1">
-<h2 id="_conclusions">6. Conclusions</h2>
+<h2 id="_conclusions">7. Conclusions</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>In this article, I wanted to share my experience with Unit Testing &amp; TDD as long as some useful tips (module isolation, database migration rollbacks) or good practices (code coverage).</p>
@@ -1301,7 +1297,7 @@ Once all things are settled down, it&#8217;s worth making the effort to write pr
 <p>Although all examples were in Elixir, you will face the same issues whatever your favorite programming language and you find similar libraries to help you on your way.</p>
 </div>
 <div class="paragraph">
-<p>Unit Testing is a common habit for smart developers. Yet TDD, due to its tests-first nature, is still underused. Yet, from my own experience, it helps you focusing on just what your code needs to do. It also helps for refactoring and makes your code tend to the most relevant design pattern.</p>
+<p>TDD, due to its tests-first nature, is still underused. Yet, from my own experience, it helps you focusing on just what your code needs to do. It also helps for refactoring and makes your code tend to the most relevant design pattern. That&#8217;s why I think any developer should embrace this methodology.</p>
 </div>
 <div class="paragraph">
 <p>Property-based testing is even less widespread. I&#8217;m relatively new to it and looking forward to add more of them in my future projects. I hope I&#8217;ve at least raised your curiosity.</p>
@@ -1311,7 +1307,7 @@ Once all things are settled down, it&#8217;s worth making the effort to write pr
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-16 23:09:06 +0200
+Last updated 2019-04-25 12:17:28 +0200
 </div>
 </div>
 </body>
